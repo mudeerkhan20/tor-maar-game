@@ -1,0 +1,283 @@
+/* Tor Maar styles. Monochrome LCD look, mobile-first, no external assets. */
+:root {
+  --frame: #14231a;
+  --frame-dark: #0d1711;
+  --lcd: #b7cc8c;
+  --lcd-dark: #a3b97a;
+  --ink: #1b2a13;
+  --key: #22382a;
+  --mono: "Courier New", Courier, "Lucida Console", monospace;
+}
+
+* { box-sizing: border-box; }
+
+html, body {
+  margin: 0;
+  height: 100%;
+  background: var(--frame-dark);
+  overscroll-behavior: none;
+  touch-action: manipulation;
+  -webkit-user-select: none;
+  user-select: none;
+  -webkit-touch-callout: none;
+  -webkit-tap-highlight-color: transparent;
+  font-family: var(--mono);
+}
+
+body { display: flex; justify-content: center; overflow: hidden; }
+
+.phone {
+  width: 100%;
+  max-width: 480px;
+  height: 100vh;
+  height: 100dvh;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  background: var(--frame);
+  padding:
+    max(env(safe-area-inset-top), 8px)
+    max(env(safe-area-inset-right), 10px)
+    max(env(safe-area-inset-bottom), 10px)
+    max(env(safe-area-inset-left), 10px);
+}
+
+@media (min-width: 520px) and (min-height: 700px) {
+  .phone { max-height: 900px; margin: auto; border-radius: 28px; box-shadow: 0 0 0 4px #000, 0 20px 60px rgba(0,0,0,.6); }
+}
+
+/* ---- brand ---- */
+.brand { flex: none; text-align: center; }
+.logo {
+  margin: 0;
+  font-family: var(--mono);
+  font-weight: 900;
+  font-size: clamp(22px, 7vw, 32px);
+  letter-spacing: .2em;
+  padding-left: .2em;
+  color: var(--lcd);
+  text-shadow: 2px 2px 0 #000, 4px 4px 0 var(--key);
+  -webkit-font-smoothing: none;
+}
+
+/* ---- LCD ---- */
+.lcd {
+  position: relative;
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  background: var(--lcd);
+  color: var(--ink);
+  border: 4px solid #070d09;
+  border-radius: 10px;
+  overflow: hidden;
+  touch-action: none; /* swipes must not scroll the page */
+  box-shadow: inset 0 0 18px rgba(27,42,19,.35);
+}
+/* Scanline overlay */
+.lcd::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 30;
+  background: repeating-linear-gradient(to bottom, rgba(0,0,0,.05) 0 1px, transparent 1px 3px);
+}
+
+.hud {
+  flex: none;
+  display: grid;
+  grid-template-columns: 1fr auto 1fr auto;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 8px;
+  border-bottom: 2px solid var(--ink);
+}
+.hud-cell { display: flex; flex-direction: column; line-height: 1; }
+.hud-label { font-size: 10px; font-weight: 700; letter-spacing: .1em; opacity: .7; }
+.hud-value { font-size: clamp(20px, 6vw, 26px); font-weight: 900; font-variant-numeric: tabular-nums; letter-spacing: .08em; }
+.hud-cell:nth-child(3) { text-align: right; align-items: flex-end; }
+.hud-mode { align-items: center; }
+
+.mode-tag {
+  display: inline-block;
+  font-size: 11px;
+  font-weight: 900;
+  letter-spacing: .08em;
+  border: 2px solid var(--ink);
+  padding: 2px 5px;
+  white-space: nowrap;
+}
+.mode-tag.practice { background: var(--ink); color: var(--lcd); }
+.mode-tag.big { font-size: 15px; padding: 4px 8px; }
+
+.board-area {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 10px;
+}
+.board-wrap {
+  position: relative;
+  outline: 3px solid var(--ink);
+  outline-offset: 3px;
+}
+.board-wrap.wraps { outline-style: dashed; }
+#board { display: block; image-rendering: pixelated; }
+
+/* ---- Maar Ralo intro ---- */
+.maar-ralo {
+  position: absolute;
+  left: 50%;
+  top: 40%;
+  white-space: nowrap;
+  pointer-events: none;
+  opacity: 0;
+  font-family: var(--mono);
+  font-weight: 900;
+  font-size: calc(var(--board-w, 280px) * 0.15);
+  letter-spacing: .04em;
+  color: var(--ink);
+  -webkit-font-smoothing: none;
+  text-shadow:
+    -3px 0 var(--lcd), 3px 0 var(--lcd), 0 -3px var(--lcd), 0 3px var(--lcd),
+    3px 3px 0 var(--lcd), -3px -3px 0 var(--lcd), -3px 3px 0 var(--lcd), 3px -3px 0 var(--lcd),
+    5px 5px 0 var(--ink);
+  transform: translate(-50%, -50%);
+  will-change: transform, opacity;
+  z-index: 5;
+}
+.maar-ralo.show { animation: maarRalo 1.9s linear forwards; }
+
+/* Chunky stepped pop-in, hold, then a smooth fade-out. */
+@keyframes maarRalo {
+  0%   { opacity: 0; transform: translate(-50%, -50%) scale(.3) rotate(-8deg); animation-timing-function: steps(1, end); }
+  8%   { opacity: 1; transform: translate(-50%, -50%) scale(1.3) rotate(5deg); animation-timing-function: steps(1, end); }
+  16%  { transform: translate(-50%, -50%) scale(.92) rotate(-4deg); animation-timing-function: steps(1, end); }
+  24%  { transform: translate(-50%, -50%) scale(1.08) rotate(2deg); animation-timing-function: steps(1, end); }
+  32%  { transform: translate(-50%, -50%) scale(1) rotate(0deg); animation-timing-function: steps(1, end); }
+  44%  { transform: translate(-50%, -54%) scale(1); animation-timing-function: steps(1, end); }
+  56%  { opacity: 1; transform: translate(-50%, -50%) scale(1); animation-timing-function: ease-in; }
+  100% { opacity: 0; transform: translate(-50%, -70%) scale(1.1) rotate(0deg); }
+}
+
+/* ---- Screens ---- */
+.screen {
+  position: absolute;
+  inset: 0;
+  z-index: 10;
+  display: none;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 14px;
+  text-align: center;
+  background: var(--lcd);
+  overflow-y: auto;
+}
+.screen.active { display: flex; }
+.screen.translucent { background: rgba(183, 204, 140, .92); }
+.title { margin: 0; font-size: clamp(20px, 6vw, 26px); letter-spacing: .12em; font-weight: 900; }
+.kicker { margin: 0; font-size: 12px; letter-spacing: .3em; font-weight: 700; opacity: .75; }
+.desc { margin: 0; font-size: 13px; line-height: 1.35; max-width: 30ch; }
+.desc.small { font-size: 11px; opacity: .7; }
+.best-line, .big-score { margin: 0; font-weight: 900; font-size: 18px; letter-spacing: .1em; }
+.big-score { font-size: 24px; }
+.record { margin: 0; font-weight: 900; letter-spacing: .1em; animation: blink 0.8s steps(1, end) infinite; }
+.record[hidden] { display: none; }
+@keyframes blink { 50% { opacity: .2; } }
+.how { list-style: none; padding: 0; margin: 0; text-align: left; font-size: 13px; line-height: 1.35; display: grid; gap: 8px; max-width: 34ch; }
+.how li { border-left: 4px solid var(--ink); padding-left: 8px; }
+.row { display: flex; gap: 8px; flex-wrap: wrap; justify-content: center; }
+
+/* ---- Buttons ---- */
+.btn {
+  font-family: var(--mono);
+  font-weight: 900;
+  font-size: 14px;
+  letter-spacing: .06em;
+  text-transform: uppercase;
+  min-height: 44px;
+  padding: 8px 14px;
+  color: var(--ink);
+  background: var(--lcd-dark);
+  border: 3px solid var(--ink);
+  border-radius: 4px;
+  box-shadow: 3px 3px 0 var(--ink);
+  cursor: pointer;
+}
+.btn:active { transform: translate(2px, 2px); box-shadow: 1px 1px 0 var(--ink); }
+.btn:disabled { opacity: .45; cursor: default; }
+.btn.primary { background: var(--ink); color: var(--lcd); }
+.btn.big { min-width: 190px; min-height: 52px; font-size: 18px; }
+.btn.small { min-height: 36px; min-width: 40px; padding: 4px 8px; }
+.btn.wide { min-width: 220px; }
+.btn.link { border-color: transparent; background: transparent; box-shadow: none; text-decoration: underline; min-height: 36px; }
+
+.chips { display: flex; gap: 6px; flex-wrap: wrap; justify-content: center; }
+.chip {
+  font-family: var(--mono);
+  font-weight: 900;
+  font-size: 13px;
+  text-transform: uppercase;
+  min-height: 40px;
+  padding: 6px 10px;
+  color: var(--ink);
+  background: transparent;
+  border: 3px solid var(--ink);
+  border-radius: 4px;
+  cursor: pointer;
+}
+.chip.selected { background: var(--ink); color: var(--lcd); }
+
+/* ---- D-pad ---- */
+.dpad {
+  flex: none;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  grid-template-rows: repeat(2, 1fr);
+  gap: 8px;
+  width: min(100%, 330px);
+  height: clamp(124px, 22vh, 170px);
+  margin: 0 auto;
+}
+.dir {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 0;
+  border-radius: 14px;
+  background: var(--key);
+  box-shadow: 0 4px 0 #000;
+  padding: 0;
+  cursor: pointer;
+  touch-action: none;
+}
+.dir svg { width: 38%; height: 38%; fill: var(--lcd); pointer-events: none; }
+.dir:active { transform: translateY(3px); box-shadow: 0 1px 0 #000; background: #2c4a37; }
+.dir.up { grid-column: 2; grid-row: 1; }
+.dir.left { grid-column: 1; grid-row: 2; }
+.dir.down { grid-column: 2; grid-row: 2; }
+.dir.right { grid-column: 3; grid-row: 2; }
+
+/* D-pad is only useful during a game; keep its space so layout never jumps. */
+body:not([data-screen="play"]) .dpad { opacity: .35; pointer-events: none; }
+body:not([data-screen="play"]) #pauseBtn { visibility: hidden; }
+
+/* ---- Landscape phones: board left, controls right ---- */
+@media (orientation: landscape) and (max-height: 520px) {
+  .phone { max-width: none; display: grid; grid-template-columns: 1fr 220px; grid-template-rows: auto 1fr; column-gap: 12px; }
+  .brand { grid-column: 1 / -1; }
+  .logo { font-size: 18px; }
+  .lcd { grid-column: 1; grid-row: 2; }
+  .dpad { grid-column: 2; grid-row: 2; align-self: center; width: 100%; height: 150px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .maar-ralo.show { animation-duration: 1.9s; }
+  .record { animation: none; }
+}

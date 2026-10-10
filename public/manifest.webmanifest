@@ -1,0 +1,13 @@
+{
+  "name": "Tor Maar",
+  "short_name": "Tor Maar",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#0d1711",
+  "theme_color": "#14231a",
+  "icons": [
+    { "src": "icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any" }
+  ]
+}

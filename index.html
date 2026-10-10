@@ -1,0 +1,103 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover" />
+    <meta name="theme-color" content="#14231a" />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <title>Tor Maar</title>
+    <link rel="manifest" href="/manifest.webmanifest" />
+    <link rel="icon" href="/icon.svg" type="image/svg+xml" />
+  </head>
+  <body data-screen="menu">
+    <div id="app" class="phone">
+      <header class="brand"><h1 class="logo">TOR MAAR</h1></header>
+
+      <main class="lcd" id="lcd">
+        <div class="hud" id="hud">
+          <div class="hud-cell"><span class="hud-label">SCORE</span><span class="hud-value" id="hudScore">000</span></div>
+          <div class="hud-cell hud-mode"><span class="mode-tag" id="hudMode">CLASSIC</span></div>
+          <div class="hud-cell"><span class="hud-label">BEST</span><span class="hud-value" id="hudBest">000</span></div>
+          <button class="btn small" id="pauseBtn" data-action="pause" aria-label="Pause">II</button>
+        </div>
+
+        <div class="board-area" id="boardArea">
+          <div class="board-wrap" id="boardWrap">
+            <canvas id="board" aria-label="Tor Maar game board"></canvas>
+            <div class="maar-ralo" id="maarRalo" aria-hidden="true">Maar Ralo</div>
+          </div>
+        </div>
+
+        <!-- Screens (overlays) -->
+        <section class="screen active" id="screen-menu">
+          <p class="kicker">RETRO SNAKE</p>
+          <button class="btn primary big" data-action="play">Play</button>
+          <div class="chips" role="radiogroup" aria-label="Game mode">
+            <button class="chip" data-action="mode" data-mode="classic" role="radio">Classic</button>
+            <button class="chip" data-action="mode" data-mode="wrap" role="radio">Wrap</button>
+            <button class="chip" data-action="mode" data-mode="practice" role="radio">Practice</button>
+          </div>
+          <p class="best-line">BEST <span id="menuBest">000</span></p>
+          <div class="row">
+            <button class="btn" id="menuSound" data-action="toggle-sound">Sound: ON</button>
+            <button class="btn" data-action="instructions">How to play</button>
+          </div>
+          <button class="btn link" data-action="settings">Settings</button>
+        </section>
+
+        <section class="screen" id="screen-ready">
+          <h2 class="title">GET READY</h2>
+          <p class="mode-tag big" id="readyMode">CLASSIC</p>
+          <p id="readyDesc" class="desc"></p>
+          <p class="desc">Swipe, use the arrows, or press WASD / arrow keys. Eat food, avoid your tail. Space pauses.</p>
+          <button class="btn primary big" data-action="start">Start Game</button>
+          <button class="btn" data-action="menu">Back</button>
+        </section>
+
+        <section class="screen translucent" id="screen-pause">
+          <h2 class="title">PAUSED</h2>
+          <button class="btn primary big" data-action="resume">Resume</button>
+          <button class="btn" data-action="restart">Restart</button>
+          <button class="btn" data-action="menu">Main Menu</button>
+        </section>
+
+        <section class="screen translucent" id="screen-over">
+          <h2 class="title" id="overTitle">GAME OVER</h2>
+          <p class="big-score">SCORE <span id="overScore">000</span></p>
+          <p class="best-line">BEST <span id="overBest">000</span></p>
+          <p class="record" id="overRecord" hidden>★ NEW RECORD! ★</p>
+          <button class="btn primary big" data-action="restart">Play Again</button>
+          <button class="btn" data-action="menu">Main Menu</button>
+        </section>
+
+        <section class="screen" id="screen-instructions">
+          <h2 class="title">HOW TO PLAY</h2>
+          <ul class="how">
+            <li><b>Steer:</b> swipe on the board, tap the arrow buttons, or use arrow keys / WASD.</li>
+            <li><b>Eat &amp; grow:</b> every food pixel is +1 point and makes you longer.</li>
+            <li><b>Avoid:</b> your own body, and the walls in Classic mode.</li>
+            <li><b>Wrap / Practice:</b> leave one edge, return from the opposite one.</li>
+            <li><b>Pause:</b> the II button or Space. <b>Start / restart:</b> buttons or Enter.</li>
+          </ul>
+          <button class="btn primary" data-action="menu">Back</button>
+        </section>
+
+        <section class="screen" id="screen-settings">
+          <h2 class="title">SETTINGS</h2>
+          <button class="btn wide" id="setSound" data-action="toggle-sound">Sound: ON</button>
+          <button class="btn wide" id="setVibration" data-action="toggle-vibration">Vibration: ON</button>
+          <p class="desc small">Settings are saved on this device.</p>
+          <button class="btn primary" data-action="menu">Back</button>
+        </section>
+      </main>
+
+      <nav class="dpad" id="dpad" aria-label="Directional controls">
+        <button class="dir up" data-dir="up" aria-label="Up"><svg viewBox="0 0 24 24"><polygon points="12,5 21,19 3,19" /></svg></button>
+        <button class="dir left" data-dir="left" aria-label="Left"><svg viewBox="0 0 24 24"><polygon points="5,12 19,3 19,21" /></svg></button>
+        <button class="dir down" data-dir="down" aria-label="Down"><svg viewBox="0 0 24 24"><polygon points="12,19 21,5 3,5" /></svg></button>
+        <button class="dir right" data-dir="right" aria-label="Right"><svg viewBox="0 0 24 24"><polygon points="19,12 5,3 5,21" /></svg></button>
+      </nav>
+    </div>
+    <script type="module" src="./src/main.js"></script>
+  </body>
+</html>
